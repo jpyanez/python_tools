@@ -20,3 +20,21 @@ def renormN(n, axis=0):
     
 def edgesToMiddle(x):
     return (x[1:]+x[:-1])/2.
+
+
+def alignHistogram( reference = None,
+                    test = None,
+                    padding = 8): # Padding is in bin size
+    padtest = np.concatenate((np.zeros(padding), test, np.zeros(padding)))
+    prodmax = 0.
+    shifted_histo = None
+    for thispad in range(-padding, padding):
+        new_hist = padtest[padding+thispad:-(padding-thispad)]
+        new_prod = np.sum(reference*new_hist)
+        if new_prod > prodmax:
+            prodmax = new_prod
+            shifted_histo = new_hist
+    if prodmax == 0:
+        return test
+    else:
+        return shifted_histo
