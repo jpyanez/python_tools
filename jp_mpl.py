@@ -10,10 +10,12 @@ fig_ysize = 6
 #matplotlib.rc('font', weight = 'bold')
 matplotlib.rc('xtick', labelsize=14)#, labelweight = 'bold')
 matplotlib.rc('ytick', labelsize=14)
+#matplotlib.rc('title', labelsize=14)
 matplotlib.rc('axes', labelsize = 14)
 matplotlib.rc('ytick.minor', size=10)
 matplotlib.rc('xtick.major', size=10)
-matplotlib.rc("axes", linewidth=2.0, grid=True)#, labelweight = 'bold')
+matplotlib.rc("axes", linewidth=1.0, grid=True, facecolor='white')#, labelweight = 'bold')
+matplotlib.rc("figure", facecolor='white', titlesize=14)
 matplotlib.rc("lines", markeredgewidth=2.0, linewidth = 2)
 #matplotlib.rc('figure', autolayout = True)
 matplotlib.rc("grid", color='#888888', linewidth = 0.3)
@@ -42,10 +44,10 @@ def apcolor(x= np.array([]), y=np.array([]), data=None, **kwargs):
     return ax, xpos, ypos
 
 def errorMark(xaxis, bin_content,
-              error = None,
-              rel_error = None,
+              error = [],
+              rel_error = [],
               color = 'blue',
-              lw    = 2.5,
+              lw    = 1.,
               label = None):
 
     if xaxis[-1] == inf:
@@ -57,8 +59,8 @@ def errorMark(xaxis, bin_content,
     xerror  = (xaxis[1:] - xaxis[:-1])/2
     error_xaxis = (xaxis[:-1]+xaxis[1:])/2
     
-    if error == None:
-        if rel_error == None:
+    if len(error)==0:
+        if len(rel_error)==0:
             yerr=sqrt(bin_content)
         else:
             yerr = rel_error*bin_content
@@ -227,7 +229,7 @@ def unfilledBar(xaxis, bin_content,
     return plot(xaxis , new_bins, drawstyle = 'steps', color = color,  **kwargs)
 
 def stackedBarPlot(xaxis, hist_list,
-                   colors = ['r', 'b', 'g', 'm', 'c', 'y'],
+                   colors = ['C0','C1','C2','C3','C4','C5'],
                    linewidth = 1,
                    fill = True,
                    outer_line = True,
@@ -257,7 +259,7 @@ def stackedBarPlot(xaxis, hist_list,
     areas = []
     lines = []
     rectangles = []
-    print 'Cumsum results ', sum(bins_cumsum, axis = 1)
+    print('Cumsum results ', sum(bins_cumsum, axis = 1))
 
     nhistograms = bins_cumsum.shape[cumsum_axis]
 
@@ -275,7 +277,7 @@ def stackedBarPlot(xaxis, hist_list,
             facecolor = colors[index-1]
         if fill:
             areas.append( fill_between(repeat(xaxis,2)[1:-1], repeat(bins_cumsum[index,:],2), repeat(bins_cumsum[index-1,:],2),
-                                       zorder = zorder-nhistograms+index, linewidth = 3,
+                                       zorder = zorder-nhistograms+index, linewidth = 0,
                                        facecolor=facecolor, edgecolor = colors[index-1], hatch = hatch[index-1], **kwargs ))
 
             rectangles.append(matplotlib.patches.Rectangle((0,0), 1, 1, fc = facecolor, linewidth=2, zorder = zorder-1,
